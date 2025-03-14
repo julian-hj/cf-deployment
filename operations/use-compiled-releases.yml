@@ -298,3 +298,6 @@
       version: "1.423"
     url: https://storage.googleapis.com/cf-deployment-compiled-releases/uaa-77.29.0-ubuntu-jammy-1.423-20250318-092856-240641298.tgz
     version: 77.29.0
+- type: replace
+  path: /stemcells/alias=default/version
+  value: "1.423"
