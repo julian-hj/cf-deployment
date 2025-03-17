@@ -50,17 +50,17 @@ vm_extensions:
 - name: ssh-proxy-and-router-lb
   cloud_properties:
     ports:
-    - host: 80
-    - host: 443
-    - host: 2222
+    - "80"
+    - "443"
+    - "2222"
 - name: cf-tcp-router-network-properties
   cloud_properties:
     ports:
-    - host: 1024-1123
+    - "1024-1123"
 - name: all_ports
   cloud_properties:
     ports:
-    - 22/tcp
+    - "22/tcp"
 vm_types:
 - name: minimal
 - name: small
