@@ -2,9 +2,9 @@
   path: /releases/-
   value:
     name: haproxy
-    sha1: 71959d17235a1ce8c9ee58da136b7c04c74e3b31
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/haproxy-boshrelease?v=9.8.0
-    version: 9.8.0
+    sha1: 5d8b1f5e3094f4c20393e1e4f642b45dd9704d7b
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/haproxy-boshrelease?v=14.7.0%2B2.8.14
+    version: 14.7.0+2.8.14
 - type: remove
   path: /instance_groups/name=router/vm_extensions
 - type: remove

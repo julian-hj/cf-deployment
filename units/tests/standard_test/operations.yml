@@ -1,16 +1,26 @@
 ---
+add-persistent-isolation-segment-diego-cell.yml: {}
+add-persistent-isolation-segment-router.yml: {}
 aws.yml: {}
 azure.yml: {}
 bosh-lite.yml: {}
-cf-syslog-skip-cert-verify.yml: {}
 configure-default-router-group.yml:
   vars:
   - default_router_group_reservable_ports=1234-2024
 disable-router-tls-termination.yml: {}
+disable-http2.yml: {}
+disable-dynamic-asgs.yml: {}
 enable-cc-rate-limiting.yml:
   vars:
   - cc_rate_limiter_general_limit=blah
   - cc_rate_limiter_unauthenticated_limit=something
+enable-cc-v2-rate-limiting.yml:
+  vars:
+  - cc_v2_rate_limiter_general_limit=blah
+  - cc_v2_rate_limiter_admin_limit=something
+  - cc_v2_rate_limiter_reset_interval_in_minutes=else
+enable-cc-worker-metrics.yml: {}
+enable-cpu-throttling.yml: {}
 enable-nfs-ldap.yml:
   ops:
   - enable-nfs-volume-service.yml
@@ -22,6 +32,7 @@ enable-privileged-container-support.yml: {}
 enable-service-discovery.yml: {}
 enable-smb-volume-service.yml: {}
 enable-tls-on-file-server.yml: {}
+enable-v2-api.yml: {}
 openstack.yml: {}
 override-app-domains.yml:
   varsfiles:
@@ -35,10 +46,18 @@ scale-to-one-az.yml: {}
 set-bbs-active-key.yml:
   vars:
   - diego_bbs_active_key_label=my_key_name
+set-cpu-weight.yml: {}
 set-router-static-ips.yml:
   vars:
   - router_static_ips=[10.0.16.4,10.0.47.5]
 stop-skipping-tls-validation.yml: {}
+use-absolute-cpu-entitlement-persistent-isolation-segment.yml:
+  ops:
+  - add-persistent-isolation-segment-diego-cell.yml
+use-absolute-cpu-entitlement-windows2019.yml:
+  ops:
+  - windows2019-cell.yml
+use-absolute-cpu-entitlement.yml: {}
 use-alicloud-oss-blobstore-to-multi-bucket.yml:
   ops:
   - use-external-blobstore.yml
@@ -60,7 +79,9 @@ use-azure-storage-blobstore.yml:
 use-blobstore-cdn.yml:
   varsfiles:
   - example-vars-files/vars-use-blobstore-cdn.yml
-use-compiled-releases.yml: {}
+use-compiled-releases.yml:
+  ops:
+   - use-compiled-releases.yml
 use-external-blobstore.yml:
   varsfiles:
   - example-vars-files/vars-use-external-blobstore.yml
@@ -97,27 +118,6 @@ use-latest-stemcell.yml:
   pathvalidator:
     path: /stemcells/alias=default/version
     expectedvalue: latest
-use-latest-windows1803-stemcell.yml:
-  ops:
-  - windows1803-cell.yml
-  - use-latest-windows1803-stemcell.yml
-  pathvalidator:
-    path: /stemcells/alias=windows1803/version
-    expectedvalue: latest
-use-latest-windows2012R2-stemcell.yml:
-  ops:
-  - windows2012R2-cell.yml
-  - use-latest-windows2012R2-stemcell.yml
-  pathvalidator:
-    path: /stemcells/alias=windows2012R2/version
-    expectedvalue: latest
-use-latest-windows2016-stemcell.yml:
-  ops:
-  - windows2016-cell.yml
-  - use-latest-windows2016-stemcell.yml
-  pathvalidator:
-    path: /stemcells/alias=windows2016/version
-    expectedvalue: latest
 use-latest-windows2019-stemcell.yml:
   ops:
   - windows2019-cell.yml
@@ -126,14 +126,6 @@ use-latest-windows2019-stemcell.yml:
     path: /stemcells/alias=windows2019/version
     expectedvalue: latest
 use-metric-store.yml: {}
-use-offline-windows1803fs.yml:
-  ops:
-  - windows1803-cell.yml
-  - use-offline-windows1803fs.yml
-use-offline-windows2016fs.yml:
-  ops:
-  - windows2016-cell.yml
-  - use-offline-windows2016fs.yml
 use-offline-windows2019fs.yml:
   ops:
   - windows2019-cell.yml
@@ -161,11 +153,18 @@ use-swift-blobstore.yml:
 use-trusted-ca-cert-for-apps.yml:
   varsfiles:
   - example-vars-files/vars-use-trusted-ca-cert-for-apps.yml
-windows1803-cell.yml: {}
-windows2012R2-cell.yml: {}
-windows2012R2-cell.yml windows2016-cell.yml:
-  ops:
-  - windows2012R2-cell.yml
-  - windows2016-cell.yml
-windows2016-cell.yml: {}
 windows2019-cell.yml: {}
+use-cflinuxfs4-compat.yml:
+  ops:
+    - use-cflinuxfs4-compat.yml
+disable-tls-tcp-routing-isolation-segment-stage-1-unproxied-ports.yml:
+  ops:
+  - add-persistent-isolation-segment-diego-cell.yml
+disable-tls-tcp-routing-isolation-segment-stage-2-route-emitter.yml:
+  ops:
+  - add-persistent-isolation-segment-diego-cell.yml
+  - disable-tls-tcp-routing-isolation-segment-stage-1-unproxied-ports.yml
+disable-tls-tcp-routing-stage-1-unproxied-ports.yml: {}
+disable-tls-tcp-routing-stage-2-tcp-router-and-route-emitter.yml:
+  ops:
+  - disable-tls-tcp-routing-stage-1-unproxied-ports.yml

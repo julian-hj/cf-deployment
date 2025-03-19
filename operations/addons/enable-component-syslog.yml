@@ -3,7 +3,8 @@
   value:
     include:
       stemcell:
-      - os: ubuntu-xenial
+      - os: ubuntu-bionic
+      - os: ubuntu-jammy
     jobs:
     - name: syslog_forwarder
       properties:
@@ -23,6 +24,6 @@
   path: /releases/-
   value:
     name: syslog
-    sha1: 7377d5a82c026e9dd346e22387abd877e151f42c
-    url: https://bosh.io/d/github.com/cloudfoundry/syslog-release?v=11.6.0
-    version: 11.6.0
+    sha1: 3b075af7e80118caa6722b1d8e60f30be7c2c466
+    url: https://bosh.io/d/github.com/cloudfoundry/syslog-release?v=12.3.7
+    version: 12.3.7

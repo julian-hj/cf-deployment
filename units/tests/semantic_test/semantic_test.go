@@ -12,7 +12,7 @@ import (
 	"github.com/cf-deployment/units/helpers"
 
 	"github.com/sergi/go-diff/diffmatchpatch"
-	yaml "gopkg.in/yaml.v2"
+	yaml "gopkg.in/yaml.v3"
 )
 
 type instanceGroup struct {
@@ -148,8 +148,7 @@ func TestSemantic(t *testing.T) {
 
 	t.Run("use-trusted-ca-cert-for-apps.yml", func(t *testing.T) {
 		certPaths := []string{
-			"/instance_groups/name=diego-cell/jobs/name=cflinuxfs3-rootfs-setup/properties/cflinuxfs3-rootfs/trusted_certs",
-			"/instance_groups/name=diego-cell/jobs/name=cflinuxfs3-rootfs-setup/properties/cflinuxfs3-rootfs/trusted_certs",
+			"/instance_groups/name=diego-cell/jobs/name=cflinuxfs4-rootfs-setup/properties/cflinuxfs4-rootfs/trusted_certs",
 		}
 
 		for _, certPath := range certPaths {
@@ -196,7 +195,7 @@ func TestSemantic(t *testing.T) {
 			manifestPath,
 			"",
 			"--path", "/instance_groups/name=isolated-diego-cell/jobs/name=rep/properties",
-			"-o", "test/add-persistent-isolation-segment-diego-cell.yml",
+			"-o", "add-persistent-isolation-segment-diego-cell.yml",
 		)
 
 		if err != nil {
@@ -204,7 +203,7 @@ func TestSemantic(t *testing.T) {
 		}
 
 		if diff, same := diffLeft(string(diegoCellRepProperties), string(isoSegDiegoCellRepProperties)); !same {
-			t.Errorf("rep properties on diego-cell have diverged between cf-deployment.yml and test/add-persistent-isolation-segment-diego-cell.yml.\n%s", diff)
+			t.Errorf("rep properties on diego-cell have diverged between cf-deployment.yml and add-persistent-isolation-segment-diego-cell.yml.\n%s", diff)
 		}
 	})
 

@@ -1,0 +1,43 @@
+- type: replace
+  path: /addons?/name=otel-collector
+  value:
+    exclude:
+      jobs:
+      - name: smoke_tests
+        release: cf-smoke-tests
+    include:
+      stemcell:
+      - os: ubuntu-jammy
+    jobs:
+    - name: otel-collector
+      properties:
+        config: ((otel_collector_config))
+        ingress:
+          grpc:
+            tls:
+              ca_cert: ((otel_collector_tls.ca))
+              cert: ((otel_collector_tls.certificate))
+              key: ((otel_collector_tls.private_key))
+      release: otel-collector
+    name: otel-collector
+- type: replace
+  path: /variables/name=otel_collector_tls?
+  value:
+    name: otel_collector_tls
+    options:
+      alternative_names:
+      - otel-collector
+      ca: loggregator_ca
+      common_name: otel-collector
+      extended_key_usage:
+      - client_auth
+      - server_auth
+    type: certificate
+    update_mode: converge
+- type: replace
+  path: /releases/name=otel-collector?
+  value:
+    name: otel-collector
+    sha1: c15ce7d312dad410580cc4b0dcd28c2328e79302
+    url: https://bosh.io/d/github.com/cloudfoundry/otel-collector-release?v=0.11.2
+    version: 0.11.2

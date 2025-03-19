@@ -83,7 +83,7 @@ disk_types:
   name: 5GB
 - disk_size: 10240
   name: 10GB
-- disk_size: 100240
+- disk_size: 102400
   name: 100GB
 ```
 
@@ -101,4 +101,4 @@ For example:
   which sends internet-bound traffic to it.
 
 [bosh-docs-cloud-config]: https://bosh.io/docs/cloud-config.html
-[cloud-config-fixtures]: https://github.com/cloudfoundry/bosh-bootloader/tree/master/cloudconfig/fixtures
+[cloud-config-fixtures]: https://github.com/cloudfoundry/bosh-bootloader/tree/main/cloudconfig/fixtures

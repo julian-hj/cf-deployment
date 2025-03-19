@@ -161,7 +161,7 @@ export STEMCELL_VERSION=$(bosh interpolate cf-deployment.yml --path=/stemcells/a
 ```
 Now you can upload the stemcell:
 ```
-bosh upload-stemcell https://bosh.io/d/stemcells/bosh-${IAAS_INFO}-ubuntu-xenial-go_agent?v=${STEMCELL_VERSION}
+bosh upload-stemcell https://bosh.io/d/stemcells/bosh-${IAAS_INFO}-ubuntu-bionic-go_agent?v=${STEMCELL_VERSION}
 ```
 
 ### Step 8: Deploy CF
@@ -292,6 +292,19 @@ such as [Amazon RDS](https://aws.amazon.com/rds/) or [Google Cloud SQL](https://
 External databases
 will require the use of the [`use-external-dbs.yml`](/operations/use-external-dbs.yml) opsfile.
 
+The following databases are tested as part of the cf-deployment pipeline:
+- MySQL 8.0 using [pxc-release](https://github.com/cloudfoundry/pxc-release) as singleton and as Galera cluster
+- PostgreSQL 16 using [postgres-release](https://github.com/cloudfoundry/postgres-release)
+- GCP Cloud SQL for MySQL 8.0 as external database
+
+The following databases should work (not tested):
+- PostgreSQL 13..15
+
+The following databases are not supported:
+- MySQL <8.0
+- PostgreSQL <13
+- MariaDB
+- any other database system
 
 ### Blobstore
 By default,

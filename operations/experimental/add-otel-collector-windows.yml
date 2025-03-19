@@ -1,0 +1,19 @@
+- type: replace
+  path: /addons?/name=otel-collector-windows2019
+  value:
+    name: otel-collector-windows2019
+    include:
+      stemcell:
+      - os: windows2019
+    jobs:
+    - name: otel-collector-windows
+      release: otel-collector
+      properties:
+        # https://opentelemetry.io/docs/collector/configuration/
+        config: ((otel_collector_config))
+        ingress:
+          grpc:
+            tls:
+              ca_cert: ((otel_collector_tls.ca))
+              cert: ((otel_collector_tls.certificate))
+              key: ((otel_collector_tls.private_key))

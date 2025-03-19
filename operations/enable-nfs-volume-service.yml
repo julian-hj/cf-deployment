@@ -10,7 +10,7 @@
 - type: replace
   path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/nfs-broker-push-client?
   value:
-    authorities: cloud_controller.admin
+    authorities: cloud_controller.admin,clients.read
     authorized-grant-types: client_credentials
     secret: ((nfs-broker-push-uaa-client-secret))
 - type: replace
@@ -64,7 +64,7 @@
         nfsbrokerpush:
           as: ignore-me
       release: nfs-volume
-    - name: cf-cli-6-linux
+    - name: cf-cli-8-linux
       release: cf-cli
     lifecycle: errand
     name: nfs-broker-push
@@ -85,11 +85,6 @@
           server_cert: ((nfsv3driver_cert.certificate))
           server_key: ((nfsv3driver_cert.private_key))
     release: nfs-volume
-- type: replace
-  path: /instance_groups/name=diego-cell/jobs/name=mapfs?
-  value:
-    name: mapfs
-    release: mapfs
 - type: replace
   path: /variables/-
   value:
@@ -135,22 +130,18 @@
   value:
     name: nfsv3driver_client_cert
     options:
+      alternative_names:
+      - nfs-client
       ca: nfs_ca
       common_name: nfs-client
       extended_key_usage:
       - client_auth
     type: certificate
+    update_mode: converge
 - type: replace
   path: /releases/-
   value:
     name: nfs-volume
-    sha1: 7e69209eaf05484f73cbeb314e7d9cabfadba75a
-    url: https://bosh.io/d/github.com/cloudfoundry/nfs-volume-release?v=6.0.0
-    version: 6.0.0
-- type: replace
-  path: /releases/name=mapfs?
-  value:
-    name: mapfs
-    sha1: 6d74bf307d78ff98600428b199c2fbf3437c47fb
-    url: https://bosh.io/d/github.com/cloudfoundry/mapfs-release?v=1.2.1
-    version: 1.2.1
+    sha1: 04d26885de47957e0868d01d20b3abb3885c993b
+    url: https://bosh.io/d/github.com/cloudfoundry/nfs-volume-release?v=7.23.0
+    version: 7.23.0

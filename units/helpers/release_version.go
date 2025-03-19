@@ -8,15 +8,11 @@ import (
 	"regexp"
 	"strings"
 
-	yaml "gopkg.in/yaml.v2"
+	yaml "gopkg.in/yaml.v3"
 )
 
 type Release string
 type Version string
-
-var cfDeploymentIgnoreFiles = []string{
-	"windows2016-cell.yml",
-}
 
 type VersionSet struct {
 	m map[Version]struct{}
@@ -171,11 +167,6 @@ func operationsWalk(assignFn func(value)) filepath.WalkFunc {
 			return nil
 		}
 
-		//TODO: remove me when windows2016 is removed
-		if isIgnored(info.Name(), cfDeploymentIgnoreFiles) {
-			return nil
-		}
-
 		handler, err := os.Open(path)
 		if err != nil {
 			return err
@@ -191,15 +182,6 @@ func operationsWalk(assignFn func(value)) filepath.WalkFunc {
 
 		return nil
 	}
-}
-
-func isIgnored(name string, ignoreList []string) bool {
-	for _, ignoreName := range ignoreList {
-		if name == ignoreName {
-			return true
-		}
-	}
-	return false
 }
 
 func readOpsFile(r io.Reader) ([]value, error) {

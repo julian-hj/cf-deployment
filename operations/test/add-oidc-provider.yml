@@ -62,13 +62,26 @@
               keys:
                 key-1:
                   signingKey: ((uaa-oidc-key1.private_key))
+                key-2:
+                  signingKey: ((uaa-oidc-cert1.private_key))
+                  signingAlg: RS256
+                  signingCert: ((uaa-oidc-cert1.certificate))
           sslCertificate: ((uaa-oidc_tls.certificate))
           sslPrivateKey: ((uaa-oidc_tls.private_key))
           clients:
             rp_oidc_admin:
               authorized-grant-types: authorization_code,client_credentials,refresh_token,user_token,password,urn:ietf:params:oauth:grant-type:saml2-bearer,implicit
               redirect-uri: https://uaa.service.cf.internal:8443/login/callback/cli-oidc-provider
-              scope: openid,uaa.admin,clients.read,clients.write,clients.secret,scim.read,scim.write,clients.admin,uaa.user
+              scopes:
+                - openid
+                - uaa.admin
+                - clients.read
+                - clients.write
+                - clients.secret
+                - scim.read
+                - scim.write
+                - clients.admin
+                - uaa.user
               authorities: uaa.admin,clients.admin
               secret: ((rp_oidc_provider_admin_secret))
           scim:
@@ -149,26 +162,44 @@
     name: uaa-oidc_ca
     type: certificate
     options:
-      is_ca: true
       common_name: uaa-oidc
       alternative_names: ["*.uaa-oidc.service.cf.internal"]
       extended_key_usage:
       - server_auth
+      is_ca: true
 
 - type: replace
   path: /variables/-
   value:
     name: saml_oidc-key1
     type: certificate
+    update_mode: converge
     options:
       ca: uaa-oidc_ca
       common_name: saml_oidc
+      alternative_names:
+      - saml_oidc
+
+- type: replace
+  path: /variables/-
+  value:
+    name: uaa-oidc-cert1
+    type: certificate
+    update_mode: converge
+    options:
+      ca: uaa-oidc_ca
+      common_name: jwt_oidc
+      alternative_names:
+      - uaa-oidc.service.cf.internal
 
 - type: replace
   path: /variables/-
   value:
     name: uaa-oidc_tls
     type: certificate
+    update_mode: converge
     options:
       ca: uaa-oidc_ca
       common_name: uaa-oidc.service.cf.internal
+      alternative_names:
+      - uaa-oidc.service.cf.internal

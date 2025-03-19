@@ -1,9 +1,6 @@
 #@data/values
 ---
 baseReleases:
-- name: binary-buildpack
-  repository: cloudfoundry/binary-buildpack-release
-  bootstrap: true
 - name: bosh-dns-aliases
   repository: cloudfoundry/bosh-dns-aliases-release
 - name: bpm
@@ -14,20 +11,12 @@ baseReleases:
   repository: cloudfoundry/cf-networking-release
 - name: cf-smoke-tests
   repository: cloudfoundry/cf-smoke-tests-release
-- name: cf-syslog-drain
-  repository: cloudfoundry/cf-syslog-drain-release
-- name: cflinuxfs3
-  repository: cloudfoundry/cflinuxfs3-release
+- name: cflinuxfs4
+  repository: cloudfoundry/cflinuxfs4-release
 - name: diego
   repository: cloudfoundry/diego-release
-- name: dotnet-core-buildpack
-  repository: cloudfoundry/dotnet-core-buildpack-release
 - name: garden-runc
   repository: cloudfoundry/garden-runc-release
-- name: go-buildpack
-  repository: cloudfoundry/go-buildpack-release
-- name: java-buildpack
-  repository: cloudfoundry/java-buildpack-release
 - name: log-cache
   repository: cloudfoundry/log-cache-release
 - name: loggregator
@@ -36,26 +25,12 @@ baseReleases:
   repository: cloudfoundry/loggregator-agent-release
 - name: nats
   repository: cloudfoundry/nats-release
-- name: nginx-buildpack
-  repository: cloudfoundry/nginx-buildpack-release
-- name: nodejs-buildpack
-  repository: cloudfoundry/nodejs-buildpack-release
-- name: php-buildpack
-  repository: cloudfoundry/php-buildpack-release
-- name: python-buildpack
-  repository: cloudfoundry/python-buildpack-release
 - name: pxc
-  repository: cloudfoundry-incubator/pxc-release
-- name: r-buildpack
-  repository: cloudfoundry/r-buildpack-release
+  repository: cloudfoundry/pxc-release
 - name: routing
   repository: cloudfoundry/routing-release
-- name: ruby-buildpack
-  repository: cloudfoundry/ruby-buildpack-release
 - name: silk
   repository: cloudfoundry/silk-release
-- name: staticfile-buildpack
-  repository: cloudfoundry/staticfile-buildpack-release
 - name: statsd-injector
   repository: cloudfoundry/statsd-injector-release
 - name: uaa
@@ -65,19 +40,39 @@ baseReleases:
 - name: cf-cli
   repository: bosh-packages/cf-cli-release
 
+buildpackReleases:
+- name: binary-buildpack
+  repository: cloudfoundry/binary-buildpack-release
+- name: dotnet-core-buildpack
+  repository: cloudfoundry/dotnet-core-buildpack-release
+- name: go-buildpack
+  repository: cloudfoundry/go-buildpack-release
+- name: java-buildpack
+  repository: cloudfoundry/java-buildpack-release
+- name: nginx-buildpack
+  repository: cloudfoundry/nginx-buildpack-release
+- name: nodejs-buildpack
+  repository: cloudfoundry/nodejs-buildpack-release
+- name: php-buildpack
+  repository: cloudfoundry/php-buildpack-release
+- name: python-buildpack
+  repository: cloudfoundry/python-buildpack-release
+- name: r-buildpack
+  repository: cloudfoundry/r-buildpack-release
+- name: ruby-buildpack
+  repository: cloudfoundry/ruby-buildpack-release
+- name: staticfile-buildpack
+  repository: cloudfoundry/staticfile-buildpack-release
+
 opsReleases:
 - name: backup-and-restore-sdk
   repository: cloudfoundry-incubator/backup-and-restore-sdk-release
-- name: bits-service
-  repository: cloudfoundry-incubator/bits-service-release
-- name: cf-app-sd
-  repository: cloudfoundry/cf-app-sd-release
+- name: cflinuxfs4-compat
+  repository: cloudfoundry/cflinuxfs4-compat-release
 - name: haproxy
   repository: cloudfoundry-incubator/haproxy-boshrelease
   varsFiles: "environments/test/pre-dev/haproxy-vars.yml"
   skipSmokeTests: true
-- name: mapfs
-  repository: cloudfoundry/mapfs-release
 - name: nfs-volume
   repository: cloudfoundry/nfs-volume-release
 - name: smb-volume
@@ -93,16 +88,19 @@ opsReleases:
   varsFiles: "environments/test/pre-dev/windows-enable-component-syslog-vars.yml"
 - name: hwc-buildpack
   repository: cloudfoundry-incubator/hwc-buildpack-release
+  requiredOpsFiles:
+  - operations/use-online-windows2019fs.yml
+  prependOpsFileToList: true
 - name: windows-utilities
   repository: cloudfoundry-incubator/windows-utilities-release
-- name: garden-windows
-  repository: cloudfoundry-incubator/garden-windows-bosh-release
+  requiredOpsFiles:
+  - operations/use-online-windows2019fs.yml
+  prependOpsFileToList: true
 - name: winc
   repository: cloudfoundry-incubator/winc-release
-- name: windows1803fs
-  repository: cloudfoundry/windows1803fs-online-release
-- name: windows2016fs
-  repository: cloudfoundry-incubator/windows2016fs-online-release
+  requiredOpsFiles:
+  - operations/use-online-windows2019fs.yml
+  prependOpsFileToList: true
 - name: windowsfs
   repository: cloudfoundry/windowsfs-online-release
   requiredOpsFiles:
@@ -111,6 +109,8 @@ opsReleases:
   repository: cloudfoundry-community/node-exporter-boshrelease
 - name: system-metrics
   repository: cloudfoundry/system-metrics-release
+- name: system-metrics-scraper
+  repository: cloudfoundry/system-metrics-scraper-release
 - name: metric-store
   repository: cloudfoundry/metric-store-release
 - name: envoy-nginx
@@ -118,35 +118,26 @@ opsReleases:
   requiredOpsFiles:
   - operations/windows2019-cell.yml
   - operations/use-online-windows2019fs.yml
-- name: metrics-discovery
-  repository: cloudfoundry/metrics-discovery-release
+- name: otel-collector
+  repository: cloudfoundry/otel-collector-release
+  varsFiles: "operations/experimental/example-vars-files/vars-override-otel-collector-exporters.yml"
+
+untestedOpsReleases:
 - name: datadog-firehose-nozzle
   repository: DataDog/datadog-firehose-nozzle-release
+  skipDeployAndTest: true
 
 windowsStemcells:
-- name: windows2012R2
-  opsFile: windows2012R2-cell.yml
-  opsFileDir: operations
-- name: windows2016
-  opsFile: windows2016-cell.yml
-  opsFileDir: operations
-- name: windows1803
-  opsFile: windows1803-cell.yml
-  opsFileDir: operations
 - name: windows2019
+  stack: windows2019
   opsFile: windows2019-cell.yml
   opsFileDir: operations
 
 windowsOfflineReleases:
-- name: windows1803fs
-  opsFile: use-offline-windows1803fs.yml
-  opsFileDir: operations
-- name: windows2016fs
-  opsFile: use-offline-windows2016fs.yml
-  opsFileDir: operations
 - name: windows2019fs
   opsFile: use-offline-windows2019fs.yml
   opsFileDir: operations
+  stemcell: windows2019-stemcell
 
 preDevEnvs:
 - name: dagobah

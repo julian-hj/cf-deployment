@@ -10,7 +10,7 @@
 - type: replace
   path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/smb-broker-client?
   value:
-    authorities: cloud_controller.admin
+    authorities: cloud_controller.admin,clients.read
     authorized-grant-types: client_credentials
     secret: ((smb-broker-uaa-client-secret))
 - type: replace
@@ -57,7 +57,7 @@
         syslog_url: ""
         username: smb-broker
       release: smb-volume
-    - name: cf-cli-6-linux
+    - name: cf-cli-8-linux
       release: cf-cli
     lifecycle: errand
     name: smb-broker-push
@@ -117,15 +117,18 @@
   value:
     name: smbdriver_client_cert
     options:
+      alternative_names:
+      - smb-client
       ca: smb_ca
       common_name: smb-client
       extended_key_usage:
       - client_auth
     type: certificate
+    update_mode: converge
 - type: replace
   path: /releases/-
   value:
     name: smb-volume
-    sha1: 59cc0fd2fd92d866c51c2cc7e3b860cab453f1c1
-    url: https://bosh.io/d/github.com/cloudfoundry/smb-volume-release?v=2.1.0
-    version: 2.1.0
+    sha1: 9ba4fd236e4f574a596dce2caee74bee20141b05
+    url: https://bosh.io/d/github.com/cloudfoundry/smb-volume-release?v=3.22.0
+    version: 3.22.0
