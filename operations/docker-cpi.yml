@@ -65,6 +65,11 @@
         key: "((loggregator_tls_agent.private_key))"
         use_v2_api: true
 
+# ----- Disable PXC persistent disk check ---
+- type: replace
+  path: /instance_groups/name=database/jobs/name=pxc-mysql/properties/disable_persistent_storage_safety_check?
+  value: true
+
 # ----- Scale Down ------
 - type: replace
   path: /instance_groups/name=nats/instances
