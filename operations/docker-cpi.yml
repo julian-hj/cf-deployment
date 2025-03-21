@@ -70,6 +70,11 @@
   path: /instance_groups/name=database/jobs/name=pxc-mysql/properties/disable_persistent_storage_safety_check?
   value: true
 
+# ----- Disable AppArmor profile
+- type: replace
+  path: /instance_groups/name=diego-cell/jobs/name=garden/properties/garden/apparmor_profile?
+  value: ""
+
 # ----- Scale Down ------
 - type: replace
   path: /instance_groups/name=nats/instances
